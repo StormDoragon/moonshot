@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String      @id @default(cuid())
+  email      String      @unique
+  name       String?
+  workspaces Workspace[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model Workspace {
+  id          String       @id @default(cuid())
+  ownerId     String
+  name        String
+  niche       String
+  timezone    String       @default("America/New_York")
+  goalType    String
+  owner       User         @relation(fields: [ownerId], references: [id])
+  profiles    PageProfile[]
+  trends      TrendSignal[]
+  ideas       ContentIdea[]
+  experiments Experiment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model PageProfile {
+  id                 String       @id @default(cuid())
+  workspaceId        String
+  platform           String       @default("facebook")
+  pageName           String
+  audienceRegion     String?
+  followerCount      Int?
+  monetizationStatus String?
+  workspace          Workspace    @relation(fields: [workspaceId], references: [id])
+  posts              PostRecord[]
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+}
+
+model PostRecord {
+  id            String      @id @default(cuid())
+  pageProfileId String
+  format        String
+  topic         String
+  hook          String
+  body          String?
+  cta           String?
+  postedAt      DateTime?
+  impressions   Int?
+  reach         Int?
+  reactions     Int?
+  comments      Int?
+  shares        Int?
+  watchTime     Int?
+  retention30s  Float?
+  clicks        Int?
+  revenue       Float?
+  sourceType    String      @default("manual")
+  pageProfile   PageProfile @relation(fields: [pageProfileId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model TrendSignal {
+  id              String    @id @default(cuid())
+  workspaceId     String
+  keyword         String
+  source          String
+  signalDate      DateTime
+  velocityScore   Float
+  saturationScore Float
+  noveltyScore    Float
+  shelfLifeHours  Int
+  workspace       Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model ContentIdea {
+  id                    String    @id @default(cuid())
+  workspaceId           String
+  title                 String
+  angle                 String
+  format                String
+  audienceIntent        String?
+  predictedEngagement   Int
+  predictedRevenueFit   Int
+  predictedTimingWindow String
+  confidence            Float
+  workspace             Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Experiment {
+  id              String              @id @default(cuid())
+  workspaceId     String
+  hypothesis      String
+  variableType    String
+  status          String              @default("draft")
+  winnerVariantId String?
+  workspace       Workspace           @relation(fields: [workspaceId], references: [id])
+  variants        ExperimentVariant[]
+}
+
+model ExperimentVariant {
+  id             String     @id @default(cuid())
+  experimentId   String
+  label          String
+  hook           String?
+  caption        String?
+  format         String?
+  predictedScore Int?
+  actualScore    Int?
+  experiment     Experiment @relation(fields: [experimentId], references: [id])
+}

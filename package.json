@@ -1,0 +1,18 @@
+{
+  "name": "fb-monetization-orbit",
+  "private": true,
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push"
+  },
+  "devDependencies": {
+    "prisma": "latest",
+    "turbo": "latest",
+    "typescript": "latest"
+  }
+}
