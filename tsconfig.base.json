@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@orbit/core/*": ["packages/core/src/*"],
+      "@orbit/prompts/*": ["packages/prompts/src/*"],
+      "@orbit/types/*": ["packages/types/src/*"],
+      "@orbit/ui/*": ["packages/ui/src/*"],
+      "@/*": ["apps/web/*"]
+    }
+  }
+}
